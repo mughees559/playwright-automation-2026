@@ -34,8 +34,8 @@ export default defineConfig({
     video: 'on-first-retry',
     screenshot: 'only-on-failure',
     javaScriptEnabled: true,
-    actionTimeout: 10000000, // Timeout for each action 5 sekund //is now change 000
-    navigationTimeout: 10000000, // Timeout for navigation// is now changed with 000
+    actionTimeout: 10000, // Timeout for each action 5 sekund //is now change 000
+    navigationTimeout: 10000, // Timeout for navigation// is now changed with 000
   },
 
   
