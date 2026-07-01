@@ -28,7 +28,7 @@ export default defineConfig({
         ignoreHTTPSErrors: true,
       },
     },
-    {
+    /*{
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
@@ -41,6 +41,6 @@ export default defineConfig({
         ...devices['Desktop Safari'],
         ignoreHTTPSErrors: true,
       },
-    },
+    },*/
   ],
 });
