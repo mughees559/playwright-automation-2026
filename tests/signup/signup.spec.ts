@@ -18,5 +18,21 @@ test.describe('Automation Exercise Signup form step 1', () => {
         await expect(signupPage.accountInfoHeader).toBeVisible();
         
     });
-    
+
+    test('Should fail to submit the initial signup form with invalid email', async ({ page }) => {
+        // Initialize the Signup Page Object
+        const signupPage = new SignupPage(page);
+        // 1. Launch & Navigate to the base URL (configured in our playwright.config.ts/.env)
+        await signupPage.navigate();
+        // 2. Verify that the page loaded successfully (e.g., checking if the signup/login link is visible)
+        await expect(signupPage.signupLoginLink).toBeVisible();
+        // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
+        //initialize the signup form with a unique email to avoid conflicts
+        await signupPage.signup('Ahmed Bilal-Test', `test`);    
+        // 4. Retrieve the browser's native warning message
+        const validationMessage = await signupPage.getEmailValidationMessage();
+        // 5. Assert that the correct warning message is displayed
+        expect(validationMessage).toContain("Please include an '@'");
 });
+
+})

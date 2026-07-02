@@ -57,5 +57,9 @@ export class SignupPage {
         await this.signupBtn.click();
     }
 
+    async getEmailValidationMessage(): Promise<string> {
+    return await this.signupEmailInput.evaluate((node) => (node as any).validationMessage);
+}
+
         
 }
