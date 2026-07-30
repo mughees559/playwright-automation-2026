@@ -63,7 +63,7 @@ test.describe('Automation Exercise Signup form', () => {
         await signupPage.signupstep1('Test user-ab', `Testuser-ab+${Date.now()}@example.com`);
         // 4. Perform the second signup form (fills out the account information and address details)
         await signupPage.signupstep2(
-            'Password123!',
+            process.env.USER_PASSWORD!,
             '1',
             'January',
             '2000',
