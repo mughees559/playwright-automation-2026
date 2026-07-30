@@ -11,7 +11,11 @@ export default defineConfig({
 
   use: {
     baseURL: ENV.APP_URL,
-    viewport: { width: 1920, height: 1080 },
+    viewport: null,
+    // 2. Pass browser launch arguments to maximize the OS window
+    launchOptions: {
+      args: ['--start-maximized'],
+    },
     actionTimeout: 10_000,
     navigationTimeout: 30_000,
     trace: 'on-first-retry',
@@ -25,6 +29,11 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        viewport: null,
+        deviceScaleFactor: undefined,
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
         ignoreHTTPSErrors: true,
       },
     },

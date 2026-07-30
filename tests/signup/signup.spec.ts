@@ -12,7 +12,7 @@ test.describe('Automation Exercise Signup form', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Ahmed Bilal-Test', `test`);    
+        await signupPage.signupstep1('Test user-ab', `test`);    
         // 4. Retrieve the browser's native warning message
         const validationMessage = await signupPage.getEmailValidationMessage();
         // 5. Assert that the correct warning message is displayed
@@ -45,7 +45,7 @@ test.describe('Automation Exercise Signup form', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Ahmed Bilal-Test', `ahmed-test+${Date.now()}@example.com`);      
+        await signupPage.signupstep1('Test user-ab', `Testuser-ab+${Date.now()}@example.com`);      
         //confirms that the account information header is visible after successful signup step 1
         await expect(signupPage.accountInfoHeader).toBeVisible();
         
@@ -60,15 +60,15 @@ test.describe('Automation Exercise Signup form', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Ahmed Bilal-Test', `ahmed-test+${Date.now()}@example.com`);
+        await signupPage.signupstep1('Test user-ab', `Testuser-ab+${Date.now()}@example.com`);
         // 4. Perform the second signup form (fills out the account information and address details)
         await signupPage.signupstep2(
             'Password123!',
             '1',
             'January',
             '2000',
-            'Ahmed',
-            'Bilal',
+            'Test',
+            'User-ab',
             'Test Company',
             '123 Test Street',
             '',
