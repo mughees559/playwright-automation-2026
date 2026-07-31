@@ -1,5 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 import { ENV } from './config/environment.config';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Read from .env file
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
   testDir: './tests',
@@ -11,7 +16,11 @@ export default defineConfig({
 
   use: {
     baseURL: ENV.APP_URL,
-    viewport: { width: 1920, height: 1080 },
+    viewport: null,
+    // 2. Pass browser launch arguments to maximize the OS window
+    launchOptions: {
+      args: ['--start-maximized'],
+    },
     actionTimeout: 10_000,
     navigationTimeout: 30_000,
     trace: 'on-first-retry',
@@ -25,10 +34,15 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        viewport: null,
+        deviceScaleFactor: undefined,
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
         ignoreHTTPSErrors: true,
       },
     },
-    {
+    /*{
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
@@ -41,6 +55,6 @@ export default defineConfig({
         ...devices['Desktop Safari'],
         ignoreHTTPSErrors: true,
       },
-    },
+    },*/
   ],
 });
