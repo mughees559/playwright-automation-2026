@@ -88,6 +88,14 @@ test.describe.serial('Signup and Login Flow', () => {
         await expect(signupPage.accountCreatedHeader).toBeVisible();
     });
 
+    test('Step 2: Login with the incorrect credentials', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.navigate();
+    await loginPage.login(`${dynamicEmail}`, 'incorrectpassword'); 
+    // Verify that the login failed and an error message is displayed
+    await expect(page.locator('text=Your email or password is incorrect!')).toBeVisible();
+  });
+
     test('Step 2: Login with the registered user/delete account', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
@@ -98,4 +106,4 @@ test.describe.serial('Signup and Login Flow', () => {
     await expect(page.locator('text=Account Deleted!')).toBeVisible(); // Ensure the delete account is successful and the confirmation message is displayed
   });
 
-   });
+});
