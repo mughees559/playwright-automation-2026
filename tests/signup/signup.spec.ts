@@ -1,7 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { SignupPage } from '../../pages/SignupPage';
+import {LoginPage} from '../../pages/LoginPage';
 
-test.describe('Automation Exercise Signup form', () => {
+ // Declare dynamic user once per test run
+    const dynamicEmail = `Testuser-ab+${Date.now()}@example.com`;
+    const password = process.env.USER_PASSWORD!; // Use the password from the environment variable
+
+test.describe.serial('Signup and Login Flow', () => {
 
     test('Should fail to submit the initial signup form with invalid email', async ({ page }) => {
         // Initialize the Signup Page Object
@@ -45,7 +50,7 @@ test.describe('Automation Exercise Signup form', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Test user-ab', `Testuser-ab+${Date.now()}@example.com`);      
+        await signupPage.signupstep1('Test user-ab', `${dynamicEmail}`);      
         //confirms that the account information header is visible after successful signup step 1
         await expect(signupPage.accountInfoHeader).toBeVisible();
         
@@ -60,10 +65,11 @@ test.describe('Automation Exercise Signup form', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Test user-ab', `Testuser-ab+${Date.now()}@example.com`);
+        await signupPage.signupstep1('Test user-ab', `${dynamicEmail}`);
         // 4. Perform the second signup form (fills out the account information and address details)
         await signupPage.signupstep2(
-            process.env.USER_PASSWORD!,
+            //process.env.USER_PASSWORD!,
+            password,
             '1',
             'January',
             '2000',
@@ -81,5 +87,15 @@ test.describe('Automation Exercise Signup form', () => {
         // 5. Assert that the account created header is visible after successful signup step 2
         await expect(signupPage.accountCreatedHeader).toBeVisible();
     });
+
+    test('Step 2: Login with the registered user/delete account', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.navigate();
+    await loginPage.login(`${dynamicEmail}`, password); // Uses exact same email!
+    await expect(page.locator('text=Logged in as')).toBeVisible();
+    await expect(page.locator('text=Delete Account')).toBeVisible(); // Ensure the delete account button is visible
+    await loginPage.deleteAccount();
+    await expect(page.locator('text=Account Deleted!')).toBeVisible(); // Ensure the delete account is successful and the confirmation message is displayed
+  });
 
    });
