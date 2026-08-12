@@ -2,9 +2,7 @@ import { test, expect } from '@playwright/test';
 import { SignupPage } from '../../pages/SignupPage';
 import {LoginPage} from '../../pages/LoginPage';
 
- // Declare dynamic user once per test run
-    const dynamicEmail = `Testuser-ab+${Date.now()}@example.com`;
-    const password = process.env.USER_PASSWORD!; // Use the password from the environment variable
+import { dynamicEmail, password, user } from './test-data';
 
 /* Run tests sequentially to pass the dynamic timestamped email to login without re-evaluating Date.now() in separate files
    that actually fails the login test because the email is different than the one used in the signup test*/
@@ -53,7 +51,7 @@ test.describe.serial('Signup and Login Flow', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Test user-ab', `${dynamicEmail}`);      
+        await signupPage.signupstep1(user.nameForStep1, dynamicEmail);      
         //confirms that the account information header is visible after successful signup step 1
         await expect(signupPage.accountInfoHeader).toBeVisible();
         
@@ -68,25 +66,24 @@ test.describe.serial('Signup and Login Flow', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Test user-ab', `${dynamicEmail}`);
-        // 4. Perform the second signup form (fills out the account information and address details)
-        await signupPage.signupstep2(
-            //process.env.USER_PASSWORD!,
-            password,
-            '1',
-            'January',
-            '2000',
-            'Test',
-            'User-ab',
-            'Test Company',
-            '123 Test Street',
-            '',
-            'United States',
-            'California',
-            'Los Angeles',
-            '90210',
-            '555-555-5555'
-        );
+        await signupPage.signupstep1(user.nameForStep1, dynamicEmail);
+                // 4. Perform the second signup form (fills out the account information and address details)
+                await signupPage.signupstep2(
+                    password,
+                    user.day,
+                    user.month,
+                    user.year,
+                    user.firstName,
+                    user.lastName,
+                    user.company,
+                    user.address1,
+                    user.address2,
+                    user.country,
+                    user.state,
+                    user.city,
+                    user.zip,
+                    user.mobile
+                );
         // 5. Assert that the account created header is visible after successful signup step 2
         await expect(signupPage.accountCreatedHeader).toBeVisible();
     });
@@ -101,7 +98,7 @@ test.describe.serial('Signup and Login Flow', () => {
         await expect(signupPage.signupLoginLink).toBeVisible();
         // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
         //initialize the signup form with a unique email to avoid conflicts
-        await signupPage.signupstep1('Test user-ab', `${dynamicEmail}`);    
+        await signupPage.signupstep1(user.nameForStep1, dynamicEmail);    
         // confirm that the email already exists message is displayed after attempting to sign up with a duplicate email
         await expect(page.locator('text=Email Address already exist!')).toBeVisible();  
                
@@ -110,7 +107,7 @@ test.describe.serial('Signup and Login Flow', () => {
     test('Login with the incorrect credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login(`${dynamicEmail}`, 'incorrectpassword'); 
+    await loginPage.login(dynamicEmail, 'incorrectpassword'); 
     // Verify that the login failed and an error message is displayed
     await expect(page.locator('text=Your email or password is incorrect!')).toBeVisible();
   });
@@ -128,7 +125,7 @@ test.describe.serial('Signup and Login Flow', () => {
     test('Login with the registered user/delete account', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login(`${dynamicEmail}`, password); // Uses exact same email!
+    await loginPage.login(dynamicEmail, password); // Uses exact same email!
     await expect(page.locator('text=Logged in as')).toBeVisible();
     await expect(page.locator('text=Delete Account')).toBeVisible(); // Ensure the delete account button is visible
     await loginPage.deleteAccount();
