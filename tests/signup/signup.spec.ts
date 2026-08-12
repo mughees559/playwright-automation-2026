@@ -6,6 +6,9 @@ import {LoginPage} from '../../pages/LoginPage';
     const dynamicEmail = `Testuser-ab+${Date.now()}@example.com`;
     const password = process.env.USER_PASSWORD!; // Use the password from the environment variable
 
+/* Run tests sequentially to pass the dynamic timestamped email to login without re-evaluating Date.now() in separate files
+   that actually fails the login test because the email is different than the one used in the signup test*/
+   
 test.describe.serial('Signup and Login Flow', () => {
 
     test('Should fail to submit the initial signup form with invalid email', async ({ page }) => {
