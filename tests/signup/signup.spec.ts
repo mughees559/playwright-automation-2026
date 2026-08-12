@@ -88,6 +88,22 @@ test.describe.serial('Signup and Login Flow', () => {
         await expect(signupPage.accountCreatedHeader).toBeVisible();
     });
 
+    test('Validate the duplicate email on SignUp', async ({ page }) => {
+        
+        // Initialize the Signup Page Object
+        const signupPage = new SignupPage(page);
+        // 1. Launch & Navigate to the base URL (configured in our playwright.config.ts/.env)
+        await signupPage.navigate();
+        // 2. Verify that the page loaded successfully (e.g., checking if the signup/login link is visible)
+        await expect(signupPage.signupLoginLink).toBeVisible();
+        // 3. Perform the initial signup form (clicks signup link, fills name/email, and clicks signup button)
+        //initialize the signup form with a unique email to avoid conflicts
+        await signupPage.signupstep1('Test user-ab', `${dynamicEmail}`);    
+        // confirm that the email already exists message is displayed after attempting to sign up with a duplicate email
+        await expect(page.locator('text=Email Address already exist!')).toBeVisible();  
+               
+    });
+
     test('Step 2: Login with the incorrect credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
