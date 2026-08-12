@@ -8,7 +8,7 @@ import {LoginPage} from '../../pages/LoginPage';
 
 /* Run tests sequentially to pass the dynamic timestamped email to login without re-evaluating Date.now() in separate files
    that actually fails the login test because the email is different than the one used in the signup test*/
-   
+
 test.describe.serial('Signup and Login Flow', () => {
 
     test('Should fail to submit the initial signup form with invalid email', async ({ page }) => {
@@ -107,7 +107,7 @@ test.describe.serial('Signup and Login Flow', () => {
                
     });
 
-    test('Step 2: Login with the incorrect credentials', async ({ page }) => {
+    test('Login with the incorrect credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
     await loginPage.login(`${dynamicEmail}`, 'incorrectpassword'); 
@@ -115,7 +115,17 @@ test.describe.serial('Signup and Login Flow', () => {
     await expect(page.locator('text=Your email or password is incorrect!')).toBeVisible();
   });
 
-    test('Step 2: Login with the registered user/delete account', async ({ page }) => {
+  test('Login with the registered user and logout', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.navigate();
+    await loginPage.login(dynamicEmail, password); // Uses exact same email!
+    await expect(page.locator('text=Logged in as')).toBeVisible();
+    await expect(page.locator('text=Logout')).toBeVisible(); // Ensure the logout button is visible
+    await loginPage.logout();
+    await expect(page.locator('text=Login to your account')).toBeVisible(); // Ensure user is redirected back to login page
+  });
+
+    test('Login with the registered user/delete account', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
     await loginPage.login(`${dynamicEmail}`, password); // Uses exact same email!

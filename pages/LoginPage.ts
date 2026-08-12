@@ -6,6 +6,7 @@ export class LoginPage {
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
   readonly deleteAccountButton: Locator;
+  readonly logoutButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -13,8 +14,9 @@ export class LoginPage {
     this.passwordInput = page.locator('input[data-qa="login-password"]');
     this.loginButton = page.locator('button[data-qa="login-button"]');
     this.deleteAccountButton = page.locator('a[href="/delete_account"]'); 
+    this.logoutButton = page.locator('a[href="/logout"]');
   }
-  
+
   async navigate() {
     await this.page.goto('/login');
   }
@@ -29,5 +31,11 @@ export class LoginPage {
     await this.deleteAccountButton.waitFor({ state: 'visible', timeout: 10000 }); // Wait for the delete account button to be visible before clicking
     await this.deleteAccountButton.click();
     await this.page.waitForSelector('text=Account Deleted!'); // Wait for the confirmation message to appear
+  }
+
+  async logout() {
+    await this.logoutButton.waitFor({ state: 'visible', timeout: 10000 });          
+    await this.logoutButton.click();
+    await this.page.$('text=Login to your account'); // Wait for the login page to be visible after logout
   }
 }
